@@ -1,0 +1,202 @@
+[
+  {
+    "path": "data/acerspyro",
+    "url": "https://github.com/redeclipse/acerspyro.git",
+    "commit": "0aae567353169c247d595b8e7507b411b977101d"
+  },
+  {
+    "path": "data/actors",
+    "url": "https://github.com/redeclipse/actors.git",
+    "commit": "939003486393c8d0a7f4fc906bd1514bc0be998c"
+  },
+  {
+    "path": "data/appleflap",
+    "url": "https://github.com/redeclipse/appleflap.git",
+    "commit": "08ccc5dd34006607e5c14db96886cf684fe5045c"
+  },
+  {
+    "path": "data/blendbrush",
+    "url": "https://github.com/redeclipse/blendbrush.git",
+    "commit": "a36c921aa9d0ff256ed6d98c9076323263ecd396"
+  },
+  {
+    "path": "data/crosshairs",
+    "url": "https://github.com/redeclipse/crosshairs.git",
+    "commit": "fe8ebfccafc605f955e3bf7b65723e3deb4470c2"
+  },
+  {
+    "path": "data/dc",
+    "url": "https://github.com/redeclipse/dc.git",
+    "commit": "9a6d264c5942af8f41efa23e4bb44fcbfec4d0f6"
+  },
+  {
+    "path": "data/decals",
+    "url": "https://github.com/redeclipse/decals.git",
+    "commit": "268f03426152c0226571d7edbf7f3e78113732c7"
+  },
+  {
+    "path": "data/dziq",
+    "url": "https://github.com/redeclipse/dziq.git",
+    "commit": "f59c5b08acc546069c10390df19ab71f85f5f211"
+  },
+  {
+    "path": "data/elyvisions",
+    "url": "https://github.com/redeclipse/elyvisions.git",
+    "commit": "612185af9b4b5719d71aa59a8e0b4534f276ce24"
+  },
+  {
+    "path": "data/fonts",
+    "url": "https://github.com/redeclipse/fonts.git",
+    "commit": "fefb25615737dd32aa6969c834aa4a25a2122ba9"
+  },
+  {
+    "path": "data/freezurbern",
+    "url": "https://github.com/redeclipse/freezurbern.git",
+    "commit": "ef7816f61a9ce0a6cfe63731ef29b2a9a27b5c16"
+  },
+  {
+    "path": "data/john",
+    "url": "https://github.com/redeclipse/john.git",
+    "commit": "f016b842d81358a869b4066bccc2b5b0a6041ad3"
+  },
+  {
+    "path": "data/jojo",
+    "url": "https://github.com/redeclipse/jojo.git",
+    "commit": "281de6ebdfa1880f90613a5e7869d30d4c9fcb2f"
+  },
+  {
+    "path": "data/jwin",
+    "url": "https://github.com/redeclipse/jwin.git",
+    "commit": "920773bdf0ef15650b914e686524f6edfbb51c27"
+  },
+  {
+    "path": "data/luckystrike",
+    "url": "https://github.com/redeclipse/luckystrike.git",
+    "commit": "9739bd80bc663072196994aea2760a982eabc0d2"
+  },
+  {
+    "path": "data/maps",
+    "url": "https://github.com/redeclipse/maps.git",
+    "commit": "a77d20d1b03820b4ae6242ec79d4d3fd79e6fba3"
+  },
+  {
+    "path": "data/mayhem",
+    "url": "https://github.com/redeclipse/mayhem.git",
+    "commit": "d14343be4a78cc27d58b7c846113c3badfc4eb9c"
+  },
+  {
+    "path": "data/mikeplus64",
+    "url": "https://github.com/redeclipse/mikeplus64.git",
+    "commit": "8442ba743087f1cb4f0243dc400dc057d29c1161"
+  },
+  {
+    "path": "data/misc",
+    "url": "https://github.com/redeclipse/misc.git",
+    "commit": "87364fb372c9b30b40f7067613603694aa867817"
+  },
+  {
+    "path": "data/mixers",
+    "url": "https://github.com/redeclipse/mixers.git",
+    "commit": "74e470c9f23e8aae9c71ff649dd9a62e5eee4573"
+  },
+  {
+    "path": "data/molexted",
+    "url": "https://github.com/redeclipse/molexted.git",
+    "commit": "ef67798c09e7c57d2e0efd01249bd77e82e6a596"
+  },
+  {
+    "path": "data/nieb",
+    "url": "https://github.com/redeclipse/nieb.git",
+    "commit": "cd631cba6ae1a1bbdfbd334204132e190d111802"
+  },
+  {
+    "path": "data/nobiax",
+    "url": "https://github.com/redeclipse/nobiax.git",
+    "commit": "f2c591226e9afe5f9854a8b951b5cf105f19527a"
+  },
+  {
+    "path": "data/particles",
+    "url": "https://github.com/redeclipse/particles.git",
+    "commit": "5325969a75481e2d50e8e5f7c51e7c7e3b0dda79"
+  },
+  {
+    "path": "data/philipk",
+    "url": "https://github.com/redeclipse/philipk.git",
+    "commit": "4882acbc07dbb0cd32d5fda0e7bb098373af8082"
+  },
+  {
+    "path": "data/projectiles",
+    "url": "https://github.com/redeclipse/projectiles.git",
+    "commit": "7e038a27d77c01aeae68041fb9c85f15fde88f86"
+  },
+  {
+    "path": "data/props",
+    "url": "https://github.com/redeclipse/props.git",
+    "commit": "5f9acb99eaed99099140d84da613c9123a990185"
+  },
+  {
+    "path": "data/q009",
+    "url": "https://github.com/redeclipse/q009.git",
+    "commit": "1c91a22eec0d6b035e3fa0fd804709e03c8af29d"
+  },
+  {
+    "path": "data/skyboxes",
+    "url": "https://github.com/redeclipse/skyboxes.git",
+    "commit": "a85b9867ab9f1f509a4cac976be60fd31b4aed08"
+  },
+  {
+    "path": "data/snipergoth",
+    "url": "https://github.com/redeclipse/snipergoth.git",
+    "commit": "9665afe6bb028b84fd1f61669d3ae2322362139d"
+  },
+  {
+    "path": "data/sounds",
+    "url": "https://github.com/redeclipse/sounds.git",
+    "commit": "aec4ab366c83ad975b79ebf41af86d2f2bd185e9"
+  },
+  {
+    "path": "data/textures",
+    "url": "https://github.com/redeclipse/textures.git",
+    "commit": "a8a89060bd07b2a62320f6110e24324dccfe1f90"
+  },
+  {
+    "path": "data/torley",
+    "url": "https://github.com/redeclipse/torley.git",
+    "commit": "cc00482579ab3dc578ddbad2d0f92b00e73d1c32"
+  },
+  {
+    "path": "data/trak",
+    "url": "https://github.com/redeclipse/trak.git",
+    "commit": "d74451e0ec018d5a5e15d6e1bd8875b7c94625a2"
+  },
+  {
+    "path": "data/ulukai",
+    "url": "https://github.com/redeclipse/ulukai.git",
+    "commit": "4cf20f48a378412c883bfe63215182438ca473ff"
+  },
+  {
+    "path": "data/unixfreak",
+    "url": "https://github.com/redeclipse/unixfreak.git",
+    "commit": "4146b1de874988ca639d965cd69d90f12a07f961"
+  },
+  {
+    "path": "data/unnamed",
+    "url": "https://github.com/redeclipse/unnamed.git",
+    "commit": "b33ca0907310a1e4e934a441ceeef79bb81e7a29"
+  },
+  {
+    "path": "data/vanities",
+    "url": "https://github.com/redeclipse/vanities.git",
+    "commit": "80966d39223cbea47c85e66af02d1e94d8a8d5ff"
+  },
+  {
+    "path": "data/vegetation",
+    "url": "https://github.com/redeclipse/vegetation.git",
+    "commit": "18074db410ca682f53dbb1ebee16aa39ac53b906"
+  },
+  {
+    "path": "data/weapons",
+    "url": "https://github.com/redeclipse/weapons.git",
+    "commit": "b3e0422f9e115e924e53bb58079d6cccdd38dd25"
+  }
+]
