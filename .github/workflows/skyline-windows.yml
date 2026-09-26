@@ -1,0 +1,60 @@
+name: Skyline Rush Windows playtest
+on:
+  workflow_dispatch:
+  push:
+    branches: [main, master]
+    paths-ignore: ["**.md"]
+permissions:
+  contents: read
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - uses: msys2/setup-msys2@v2
+        with:
+          msystem: MINGW64
+          update: true
+          install: make mingw-w64-x86_64-gcc
+      - name: Build client and private server
+        shell: msys2 {0}
+        run: make -C src -j2 client server CXXFLAGS=-O2
+      - name: Assemble playtest folder
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force package/skyline-rush/bin/amd64 | Out-Null
+          Copy-Item src/redeclipse_windows_amd64.exe,src/redeclipse_server_windows_amd64.exe package/skyline-rush/bin/amd64/
+          Copy-Item bin/amd64/*.dll package/skyline-rush/bin/amd64/
+          Copy-Item bin/LICENSE* package/skyline-rush/bin/
+          Copy-Item config,data,maps,doc,scripts -Destination package/skyline-rush/ -Recurse
+          Get-ChildItem package/skyline-rush/data -Recurse -Force -Filter .git | Remove-Item -Force
+          Copy-Item skyline-rush.bat,skyline-server.bat,skyline-room.bat,SKYLINE-START-HERE.md,SKYLINE-PLAYTEST-02.md,SKYLINE-LICENSE.md,readme.txt package/skyline-rush/
+      - name: Verify packaged Windows server startup
+        shell: pwsh
+        run: |
+          $root = (Resolve-Path package/skyline-rush).Path
+          $smokeHome = Join-Path $env:RUNNER_TEMP 'skyline-smoke'
+          New-Item -ItemType Directory -Force $smokeHome | Out-Null
+          $exe = Join-Path $root 'bin/amd64/redeclipse_server_windows_amd64.exe'
+          $proc = Start-Process -FilePath $exe -WorkingDirectory $root -ArgumentList @("-h$smokeHome", '-gstartup.log', '-ss1', '-si127.0.0.1', '-sm', '-x"echo SKYLINE_WINDOWS_SMOKE"') -PassThru
+          try {
+            Start-Sleep -Seconds 6
+            $log = Join-Path $smokeHome 'startup.log'
+            if ($proc.HasExited) { throw "Server exited early: $($proc.ExitCode)" }
+            if (-not (Test-Path $log)) { throw 'Server did not write its startup log.' }
+            $text = Get-Content $log -Raw
+            if ($text -notmatch 'SKYLINE_WINDOWS_SMOKE' -or $text -notmatch 'Dedicated server started') { throw "Startup check failed: $text" }
+            Write-Host 'PASS: packaged Windows server loads and starts on loopback.'
+          } finally {
+            if (-not $proc.HasExited) { Stop-Process -Id $proc.Id -Force }
+          }
+      - name: Verify every room preset and district
+        shell: pwsh
+        run: ./package/skyline-rush/scripts/skyline/test-rooms.ps1
+      - uses: actions/upload-artifact@v4
+        with:
+          name: skyline-rush-windows-playtest
+          path: package/skyline-rush/
+          retention-days: 14

@@ -1,0 +1,36 @@
+name: Skyline Rush graphics and multiplayer smoke
+on:
+  workflow_dispatch:
+  push:
+    branches: [main, master]
+    paths-ignore: ["**.md"]
+permissions:
+  contents: read
+jobs:
+  graphical-smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - name: Install Linux graphics dependencies
+        run: sudo apt-get update && sudo apt-get install -y build-essential pkg-config libsdl2-dev libsdl2-image-dev libopenal-dev libsndfile1-dev libgl1-mesa-dev libx11-dev zlib1g-dev xvfb xauth
+      - name: Build client and server
+        run: make -C src -j2 client server CXXFLAGS=-O1
+      - name: Validate all districts
+        run: |
+          python3 scripts/skyline/check_arena.py heights
+          python3 scripts/skyline/check_arena.py lagoon
+          python3 scripts/skyline/check_arena.py rift
+      - name: Render districts and connect two clients
+        env:
+          LIBGL_ALWAYS_SOFTWARE: "1"
+          ALSOFT_DRIVERS: "null"
+        run: xvfb-run -a -s "-screen 0 1280x720x24" python3 scripts/skyline/graphics-smoke.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: skyline-graphics-evidence
+          path: smoke-evidence/
+          retention-days: 14

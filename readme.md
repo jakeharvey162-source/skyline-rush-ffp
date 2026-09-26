@@ -1,3 +1,9 @@
+# Skyline Rush — district playtest 0.2
+
+Three African-inspired arena blockouts, private 1v1 / 2v2 / 4v4 presets and experimental co-op. See [the current guide](SKYLINE-PLAYTEST-02.md).
+
+The web/ folder is a Vercel-compatible download website, not a browser version of the C++ game. No Supabase project is connected or required for private matches.
+
 # Skyline Rush
 
 ![Skyline Rush](data/skyline/logo.png)
@@ -17,7 +23,7 @@ This is a development prototype, not a finished commercial release. The original
 
 ## Get the Windows playtest
 
-Open [Actions](https://github.com/jakeharvey162-source/skyline-rush/actions) and select a **successful** Skyline Rush Windows playtest run. Download its `skyline-rush-windows-playtest` artifact, extract everything and launch `skyline-rush.bat`. A successful build is not a substitute for testing gameplay on a Windows PC.
+Open [Actions](https://github.com/jakeharvey162-source/skyline-rush-ffp/actions) and select a **successful** Skyline Rush Windows playtest run. Download its `skyline-rush-windows-playtest` artifact, extract everything and launch `skyline-rush.bat`. A successful build is not a substitute for testing gameplay on a Windows PC.
 
 [Setup and controls](SKYLINE-START-HERE.md) · [Licensing](SKYLINE-LICENSE.md)
 
