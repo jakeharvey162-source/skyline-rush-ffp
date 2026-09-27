@@ -1,0 +1,89 @@
+name: Publish Skyline Rush downloads
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: [.github/workflows/skyline-downloads.yml]
+  workflow_run:
+    workflows: [Skyline Rush Windows playtest]
+    types: [completed]
+permissions:
+  actions: read
+  contents: write
+concurrency:
+  group: skyline-public-downloads
+  cancel-in-progress: false
+jobs:
+  publish:
+    if: github.event_name != 'workflow_run' || (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'main' && github.event.workflow_run.head_repository.full_name == github.repository)
+    runs-on: windows-latest
+    timeout-minutes: 35
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+    steps:
+      - name: Download newest successful Windows build
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $runs = gh run list --workflow skyline-windows.yml --branch main --status success --limit 1 --json databaseId,headSha | ConvertFrom-Json
+          if ($LASTEXITCODE -ne 0 -or $runs.Count -eq 0) { throw 'No successful Windows build available' }
+          $run = $runs[0]
+          gh run download $run.databaseId --name skyline-rush-windows-playtest --dir package/skyline-rush
+          if ($LASTEXITCODE -ne 0) { throw 'Artifact download failed' }
+          if (-not (Test-Path package/skyline-rush/bin/amd64/redeclipse_windows_amd64.exe)) { throw 'Game executable missing' }
+          "BUILD_SHA=$($run.headSha)" >> $env:GITHUB_ENV
+          "BUILD_RUN=$($run.databaseId)" >> $env:GITHUB_ENV
+          "RELEASE_TAG=playtest-$($run.headSha.Substring(0,12))" >> $env:GITHUB_ENV
+      - name: Package and verify every archive part
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          New-Item -ItemType Directory -Force release | Out-Null
+          Push-Location package
+          & 7z a -t7z -mx=3 -v1800m ../release/skyline-rush-windows.7z skyline-rush
+          if ($LASTEXITCODE -ne 0) { throw 'Archive creation failed' }
+          Pop-Location
+          & 7z t release/skyline-rush-windows.7z.001
+          if ($LASTEXITCODE -ne 0) { throw 'Archive integrity test failed' }
+          $parts = Get-ChildItem release/skyline-rush-windows.7z.*
+          if ($parts.Count -eq 0) { throw 'No archive parts' }
+          $lines = foreach ($part in $parts) {
+            if ($part.Length -ge 2GB) { throw 'Part exceeds GitHub release limit' }
+            $hash = (Get-FileHash $part.FullName -Algorithm SHA256).Hash.ToLowerInvariant()
+            "$hash  $($part.Name)"
+          }
+          $lines | Set-Content release/SHA256SUMS.txt
+      - name: Publish verified public download
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $existing = gh release view $env:RELEASE_TAG --json isDraft 2>$null
+          $exists = $LASTEXITCODE -eq 0
+          if ($exists -and -not ($existing | ConvertFrom-Json).isDraft) {
+            Write-Host 'This build is already published. Keeping its existing downloads.'
+            exit 0
+          }
+          @(
+            'Skyline Rush Windows 64-bit development playtest.',
+            '',
+            'Download ALL numbered .7z parts into one folder. Use 7-Zip to extract .7z.001; the remaining parts are read automatically.',
+            'Open skyline-rush.bat for practice or skyline-room.bat for private multiplayer.',
+            '',
+            'Android APK: not available. This release is a native Windows game.',
+            'Unsigned prototype: Windows may show a publisher warning. Do not disable antivirus protection.',
+            '',
+            "Source commit: $env:BUILD_SHA",
+            "Successful build: https://github.com/$env:GH_REPO/actions/runs/$env:BUILD_RUN",
+            'Original contributor credits and asset licences are included.'
+          ) | Set-Content release-notes.md
+          if (-not $exists) {
+            gh release create $env:RELEASE_TAG --target $env:BUILD_SHA --title 'Skyline Rush — Windows District Playtest' --notes-file release-notes.md --draft --prerelease
+            if ($LASTEXITCODE -ne 0) { throw 'Release creation failed' }
+          }
+          $assets = (Get-ChildItem release -File).FullName
+          gh release upload $env:RELEASE_TAG @assets --clobber
+          if ($LASTEXITCODE -ne 0) { throw 'Upload failed; release remains draft' }
+          gh release edit $env:RELEASE_TAG --draft=false
+          if ($LASTEXITCODE -ne 0) { throw 'Publish failed' }
+
