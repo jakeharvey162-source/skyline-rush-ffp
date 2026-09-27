@@ -15,6 +15,16 @@ class HostTests
     }
     static int Main(string[] args)
     {
+        if (args.Length == 3 && args[1] == "worker")
+        {
+            using (var worker = new WindowsMatchHost(args[0], args[2], 41301, 1))
+            {
+                var match = worker.Start(Guid.NewGuid(), "duel", "heights"); Ready(match);
+                File.WriteAllText(Path.Combine(args[2], "pid"), match.ProcessId.ToString());
+                Thread.Sleep(Timeout.Infinite);
+            }
+            return 0;
+        }
         string state = Path.Combine(Path.GetTempPath(), "SkylineHostTest-" + Guid.NewGuid());
         try
         {
@@ -45,6 +55,28 @@ class HostTests
                     Check(host.Reap(TimeSpan.Zero).Contains(c.Id), "maximum lifetime cleanup");
                 }
             }
+            string workerState = state + "-worker";
+            var start = new ProcessStartInfo(Process.GetCurrentProcess().MainModule.FileName,
+                "\"" + args[0] + "\" worker \"" + workerState + "\"");
+            start.UseShellExecute = false;
+            using (var owner = Process.Start(start))
+            {
+                try
+                {
+                    string pidFile = Path.Combine(workerState, "pid");
+                    for (int i = 0; i < 150 && !File.Exists(pidFile) && !owner.HasExited; i++) Thread.Sleep(100);
+                    Check(File.Exists(pidFile), "host crash fixture started");
+                    using (var server = Process.GetProcessById(int.Parse(File.ReadAllText(pidFile))))
+                    {
+                        owner.Kill(); owner.WaitForExit();
+                        Check(server.WaitForExit(5000), "host crash kills owned dedicated server");
+                    }
+                    using (var recovered = new WindowsMatchHost(args[0], workerState, 41301, 1))
+                        Check(Directory.GetFiles(workerState, "servinit.cfg", SearchOption.AllDirectories).Length == 0, "stale credentials cleaned on restart");
+                }
+                finally { if (!owner.HasExited) { owner.Kill(); owner.WaitForExit(); } }
+            }
+            Directory.Delete(workerState, true);
             return 0;
         }
         catch (Exception e) { Console.Error.WriteLine(e); return 1; }
