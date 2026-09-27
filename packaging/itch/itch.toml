@@ -1,0 +1,9 @@
+[[actions]]
+name = "Play Skyline Rush"
+path = "skyline-rush.bat"
+platform = "windows"
+
+[[actions]]
+name = "Host a private room"
+path = "skyline-room.bat"
+platform = "windows"

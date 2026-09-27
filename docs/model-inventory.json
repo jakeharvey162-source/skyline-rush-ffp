@@ -1,0 +1,92 @@
+[
+  {
+    "file": "rainier_ak_-_3d.glb",
+    "bytes": 81564668,
+    "metadata": {
+      "author": "skartemka (https://sketchfab.com/skartemka)",
+      "license": "CC-BY-NC-4.0 (http://creativecommons.org/licenses/by-nc/4.0/)",
+      "source": "https://sketchfab.com/3d-models/rainier-ak-3d-57aef8cdf42046a39f1ad9b428756213",
+      "title": "RAINIER AK - 3D"
+    },
+    "triangles": 47316,
+    "skins": 0,
+    "animations": 0,
+    "intended_role": "Rainier AK weapon; non-commercial asset only",
+    "status": "Inspected; not converted or integrated"
+  },
+  {
+    "file": "winter_soldier_-_summer_soldier.glb",
+    "bytes": 28571560,
+    "metadata": {
+      "author": "YE YE (https://sketchfab.com/YEEZY_YE)",
+      "license": "CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)",
+      "source": "https://sketchfab.com/3d-models/winter-soldier-summer-soldier-1406698695054d22b83814582a5b5dd2",
+      "title": "Winter Soldier - Summer Soldier"
+    },
+    "triangles": 165831,
+    "skins": 1,
+    "animations": 0,
+    "intended_role": "Primary player character; later elite human enemies",
+    "status": "Inspected; not converted or integrated"
+  },
+  {
+    "file": "weapon_dc-17m_battle_rifle.glb",
+    "bytes": 28622776,
+    "metadata": {
+      "author": "witt-commando(RC-3106) (https://sketchfab.com/gsilvacordova)",
+      "license": "CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)",
+      "source": "https://sketchfab.com/3d-models/weapon-dc-17m-battle-rifle-c9180cb1d19942efb83473cbf52f28b6",
+      "title": "Weapon Dc-17m Battle Rifle"
+    },
+    "triangles": 11857,
+    "skins": 0,
+    "animations": 0,
+    "intended_role": "Advanced rifle variant",
+    "status": "Inspected; not converted or integrated"
+  },
+  {
+    "file": "combat_robot.glb",
+    "bytes": 88855084,
+    "metadata": {
+      "author": "ILUSHANDRO (https://sketchfab.com/ILUSHANDRO)",
+      "license": "CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)",
+      "source": "https://sketchfab.com/3d-models/combat-robot-55fe65bbb4074979ac0cb44850df4ddc",
+      "title": "Combat Robot"
+    },
+    "triangles": 122006,
+    "skins": 0,
+    "animations": 0,
+    "intended_role": "Heavy enemy in industrial districts",
+    "status": "Inspected; not converted or integrated"
+  },
+  {
+    "file": "yamaha_yzf-r1_race_tech_black.glb",
+    "bytes": 95303552,
+    "metadata": {
+      "author": "dragos12_ (https://sketchfab.com/dragos12_)",
+      "license": "CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)",
+      "source": "https://sketchfab.com/3d-models/yamaha-yzf-r1-race-tech-black-8a020dc63e3e41139a4d5eea651bdcbc",
+      "title": "Yamaha YZF-R1 RACE Tech Black"
+    },
+    "triangles": 273680,
+    "skins": 0,
+    "animations": 0,
+    "intended_role": "Static garage scenery first; riding requires vehicle physics",
+    "status": "Inspected; not converted or integrated"
+  },
+  {
+    "file": "low-poly_colt_m4a1.glb",
+    "bytes": 1898732,
+    "metadata": {
+      "author": "D_U (https://sketchfab.com/DU1701)",
+      "license": "CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)",
+      "source": "https://sketchfab.com/3d-models/low-poly-colt-m4a1-c0313e9f6c164de8903615c4297a2485",
+      "title": "low-poly Colt M4A1"
+    },
+    "triangles": 23533,
+    "skins": 0,
+    "animations": 0,
+    "intended_role": "Standard assault-rifle visual",
+    "status": "Inspected; not converted or integrated"
+  }
+]

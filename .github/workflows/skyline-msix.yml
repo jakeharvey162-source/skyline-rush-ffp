@@ -1,0 +1,59 @@
+name: Skyline Rush Microsoft package validation
+on:
+  push:
+    branches: [main]
+    paths: ["packaging/windows/**", ".github/workflows/skyline-msix.yml"]
+  workflow_dispatch:
+    inputs:
+      identity_name:
+        description: Exact Package Identity Name from Partner Center (blank uses test identity)
+        required: false
+        type: string
+      publisher:
+        description: Exact Publisher from Partner Center
+        required: false
+        type: string
+      publisher_display_name:
+        description: Exact Publisher Display Name from Partner Center
+        required: false
+        type: string
+permissions:
+  contents: read
+  actions: read
+jobs:
+  package:
+    runs-on: windows-latest
+    timeout-minutes: 30
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+      STORE_IDENTITY: ${{ inputs.identity_name }}
+      STORE_PUBLISHER: ${{ inputs.publisher }}
+      STORE_DISPLAY: ${{ inputs.publisher_display_name }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download successful Windows build
+        shell: pwsh
+        run: |
+          $run = @(gh run list --workflow skyline-windows.yml --branch main --status success --limit 1 --json databaseId | ConvertFrom-Json)
+          if ($LASTEXITCODE -ne 0 -or $run.Count -eq 0) { throw 'No successful game build' }
+          gh run download $run[0].databaseId --name skyline-rush-windows-playtest --dir game
+          if ($LASTEXITCODE -ne 0) { throw 'Game download failed' }
+      - name: Build and validate MSIX
+        shell: pwsh
+        run: |
+          if ($env:STORE_IDENTITY) {
+            if (-not $env:STORE_PUBLISHER -or -not $env:STORE_DISPLAY) { throw 'All three Partner Center identity fields are required' }
+          } else {
+            $env:STORE_IDENTITY = 'SkylineRush.PackagingTest'
+            $env:STORE_PUBLISHER = 'CN=SkylineRushPackagingTest'
+            $env:STORE_DISPLAY = 'Skyline Rush Packaging Test'
+            Write-Warning 'TEST IDENTITY ONLY. This package is not for Store submission or direct installation.'
+          }
+          ./packaging/windows/build-msix.ps1 -GameDirectory ./game -IdentityName $env:STORE_IDENTITY -Publisher $env:STORE_PUBLISHER -PublisherDisplayName $env:STORE_DISPLAY -OutputDirectory ./store-output
+      - uses: actions/upload-artifact@v4
+        with:
+          name: skyline-unsigned-msix-requires-store-identity
+          path: store-output/*.msix
+          retention-days: 7
+
