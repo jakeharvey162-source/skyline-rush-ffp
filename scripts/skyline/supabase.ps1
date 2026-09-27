@@ -65,3 +65,21 @@ function Join-SkylineCloudRoom {
         p_room_code = $RoomCode.ToUpperInvariant()
     }
 }
+
+# Member-only lobby state; no service-role key is needed.
+function Get-SkylineLobby {
+    param([Parameter(Mandatory=$true)][string]$AccessToken,
+          [Parameter(Mandatory=$true)][guid]$RoomId)
+    Invoke-SkylineSupabaseRpc -Rpc "skyline_lobby_action" -AccessToken $AccessToken -Body @{p_room_id=$RoomId.ToString();p_action="view"}
+}
+function Set-SkylineReady {
+    param([Parameter(Mandatory=$true)][string]$AccessToken,
+          [Parameter(Mandatory=$true)][guid]$RoomId,
+          [Parameter(Mandatory=$true)][bool]$Ready)
+    Invoke-SkylineSupabaseRpc -Rpc "skyline_lobby_action" -AccessToken $AccessToken -Body @{p_room_id=$RoomId.ToString();p_action="ready";p_ready=$Ready}
+}
+function Exit-SkylineLobby {
+    param([Parameter(Mandatory=$true)][string]$AccessToken,
+          [Parameter(Mandatory=$true)][guid]$RoomId)
+    Invoke-SkylineSupabaseRpc -Rpc "skyline_lobby_action" -AccessToken $AccessToken -Body @{p_room_id=$RoomId.ToString();p_action="leave"}
+}

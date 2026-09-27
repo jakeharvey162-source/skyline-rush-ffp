@@ -1,0 +1,16 @@
+name: Skyline Rush match pool checks
+on:
+  push:
+    branches: [main]
+    paths: ["deploy/digitalocean/**", ".github/workflows/skyline-match-pool.yml"]
+  pull_request:
+    paths: ["deploy/digitalocean/**", ".github/workflows/skyline-match-pool.yml"]
+permissions:
+  contents: read
+jobs:
+  pool:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: bash -n deploy/digitalocean/run-server.sh
+      - run: python3 deploy/digitalocean/test_match_pool.py

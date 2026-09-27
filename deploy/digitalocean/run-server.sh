@@ -22,8 +22,8 @@ case "$DISTRICT" in
   *) echo "Unsupported SKYLINE_DISTRICT: $DISTRICT" >&2; exit 2 ;;
 esac
 
-if ! [[ "$PORT" =~ ^[0-9]+$ ]] || (( PORT < 1024 || PORT > 65535 )); then
-  echo "SKYLINE_PORT must be 1024-65535" >&2
+if ! [[ "$PORT" =~ ^[0-9]+$ ]] || (( PORT < 1024 || PORT > 65534 )); then
+  echo "SKYLINE_PORT must be 1024-65534" >&2
   exit 2
 fi
 
@@ -38,9 +38,12 @@ if [[ ! -x "$SERVER" ]]; then
   exit 3
 fi
 
-install -d -m 0750 "$STATE_DIR"
+umask 077
+install -d -m 0700 "$STATE_DIR"
 cat > "$STATE_DIR/servinit.cfg" <<EOF
 serverport $PORT
+serverlanport 0
+httpserver 0
 servermaster ""
 serverpass "$PASSWORD"
 sv_serverdesc "Skyline Rush | Cloud | $MODE"
@@ -73,3 +76,4 @@ EOF
 
 cd "$ROOT"
 exec "$SERVER" -h"$STATE_DIR" -gserver.log -ss1 -sm -xskyline_startroom
+
