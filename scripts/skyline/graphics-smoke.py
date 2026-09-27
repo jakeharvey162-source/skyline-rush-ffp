@@ -28,8 +28,8 @@ def finish(proc,home,log,marker):
         if proc.poll() is None: proc.kill();proc.wait()
         log.close()
 for district in ('heights','lagoon','rift'):
-    # Wait in game time, then move/fire briefly before recording the live frame.
-    script=f'name SkylineTester; gameui_close_all; botbalance 4; start maps/skyline/{district} 2 0; sleep 12000 [gameui_close_all; spectate 0; sleep 1000 [screenshot {district}; echo SKYLINE_RENDER_{district} $mapname; quit]]'
+    # Choose a valid loadout before joining; an empty loadout prevents spawning.
+    script=f'name SkylineTester; playerloadweap [2 3]; gameui_close_all; botbalance 4; start maps/skyline/{district} 2 0; sleep 12000 [gameui_close_all; spectate 0; sleep 1000 [screenshot {district}; echo SKYLINE_RENDER_{district} $mapname; quit]]'
     finish(*launch(district,script),f'SKYLINE_RENDER_{district} maps/skyline/{district}')
 serverhome=OUT/'server';serverhome.mkdir(exist_ok=True)
 (serverhome/'servinit.cfg').write_text('servermaster ""\nserverpass "SmokeOnly93"\nsv_serverclients 2\nsv_serverspectators 0\nsv_defaultmap "maps/skyline/lagoon"\nsv_defaultmode 2\nsv_defaultmuts 1\nsv_botbalance 0\nsv_rotatemode 0\nsv_rotatemuts 0\nsv_resetvarsonend 0\n')
@@ -39,7 +39,7 @@ with open(serverhome/'stdout.log','w') as log:
     try:
         time.sleep(3)
         for i in (1,2):
-            script=f'connectguidelines 1; name SmokePlayer{i}; connect 127.0.0.1 29801 SmokeOnly93; sleep 20000 [if (=s (connectedip) "127.0.0.1") [gameui_close_all; spectate 0; sleep 1000 [screenshot player{i}; echo SKYLINE_CONNECTED_{i} $mapname (getclientnum SmokePlayer{3-i}); quit]] [echo SKYLINE_CONNECTION_FAILED; quit]]'
+            script=f'connectguidelines 1; name SmokePlayer{i}; playerloadweap [2 3]; connect 127.0.0.1 29801 SmokeOnly93; sleep 20000 [if (=s (connectedip) "127.0.0.1") [gameui_close_all; spectate 0; sleep 1000 [screenshot player{i}; echo SKYLINE_CONNECTED_{i} $mapname (getclientnum SmokePlayer{3-i}); quit]] [echo SKYLINE_CONNECTION_FAILED; quit]]'
             clients.append((*launch(f'player{i}',script),f'SKYLINE_CONNECTED_{i} maps/skyline/lagoon'))
         for job in clients: finish(*job)
     finally:
