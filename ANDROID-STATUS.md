@@ -7,3 +7,7 @@ A real Android port requires arm64 native dependencies, Android lifecycle/storag
 Public distribution requires a persistent private signing key, signed APK verification, device install/update tests, and compliance with current Android developer verification requirements. Never commit signing secrets. Warning-free installation and store acceptance cannot be guaranteed.
 
 The website exposes only published Windows release assets, with archive integrity checks and checksums. Android download links must remain unavailable until a playable build is tested.
+
+## First-class development target
+
+Windows and Android are both required targets. See [the staged cross-platform development plan](docs/ANDROID-DEVELOPMENT-PLAN.md) for native engine work, touch UI, shared Supabase rooms, Tailscale alpha hosting, compatibility checks, APK/AAB CI and physical-device release gates. These are requirements, not completed Android features.

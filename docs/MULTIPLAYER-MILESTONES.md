@@ -21,3 +21,7 @@ Continue the existing C++ engine, Supabase tables and Linux server. No replaceme
 5. Public-server two-network tests, password rejection, reconnect, packet loss and latency; then player release.
 
 The full 16-priority alpha roadmap remains open: menu/HUD redesign, maps, model conversion and animation, gunplay, AI, progression, accessibility, performance and release QA. Uploaded GLB assets are still not integrated. No public-server deployment or complete online room flow is claimed by this increment.
+
+## Windows and Android requirement
+
+[The Android development plan](ANDROID-DEVELOPMENT-PLAN.md) extends this roadmap. Both native clients must share accounts, rooms and compatibility checks. The immediate no-cost alpha hosting path is a participant PC dedicated server over Tailscale, with Supabase room discovery; public cloud allocation remains optional. Android is not yet playable. The Linux MatchPool still needs a tested Windows host adapter for that alpha hosting path.
