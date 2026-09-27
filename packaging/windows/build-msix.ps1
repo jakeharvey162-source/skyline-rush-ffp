@@ -21,7 +21,9 @@ $sdkRoot = Join-Path ${env:ProgramFiles(x86)} 'Windows Kits/10/bin'
 $makeappx = Get-ChildItem "$sdkRoot/*/x64/makeappx.exe" | Sort-Object FullName -Descending | Select-Object -First 1
 if (-not $makeappx) { throw 'Install the Windows SDK with MakeAppx first.' }
 $compiler = Join-Path $env:WINDIR 'Microsoft.NET/Framework64/v4.0.30319/csc.exe'
-& $compiler /nologo /target:winexe /platform:x64 /reference:System.Windows.Forms.dll "/out:$stage/SkylineRush.exe" "$PSScriptRoot/Launcher.cs"
+$launcherSource = [System.IO.Path]::GetFullPath((Join-Path $PSScriptRoot 'Launcher.cs'))
+$launcherOutput = [System.IO.Path]::GetFullPath((Join-Path $stage 'SkylineRush.exe'))
+& $compiler /nologo /target:winexe /platform:x64 /reference:System.Windows.Forms.dll "/out:$launcherOutput" $launcherSource
 if ($LASTEXITCODE -ne 0) { throw 'Launcher compilation failed.' }
 $icon = Join-Path $game 'data/skyline/icon.png'
 if (-not (Test-Path $icon)) { throw 'Packaged data/skyline/icon.png is missing.' }
