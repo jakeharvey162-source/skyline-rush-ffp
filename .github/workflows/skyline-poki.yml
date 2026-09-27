@@ -1,0 +1,53 @@
+name: Skyline Rush Poki web checks
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - "web/poki/**"
+      - ".github/workflows/skyline-poki.yml"
+permissions:
+  contents: read
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Validate JavaScript syntax
+        run: node --check web/poki/game.js
+      - name: Enforce self-contained runtime
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f web/poki/index.html
+          test -f web/poki/style.css
+          test -f web/poki/game.js
+          python3 - <<'PY'
+          from pathlib import Path
+          html = Path("web/poki/index.html").read_text()
+          allowed = "https://game-cdn.poki.com/scripts/v2/poki-sdk.js"
+          urls = []
+          import re
+          for p in Path("web/poki").glob("*"):
+              if p.suffix.lower() in {".html",".js",".css"}:
+                  urls += re.findall(r'https?://[^"\'\s)>]+', p.read_text())
+          bad = [u for u in urls if u != allowed]
+          if bad:
+              raise SystemExit("External runtime URLs are not allowed: " + ", ".join(bad))
+          for required in ["gameLoadingFinished","gameplayStart","gameplayStop","commercialBreak"]:
+              if required not in Path("web/poki/game.js").read_text():
+                  raise SystemExit("Missing Poki SDK event: " + required)
+          print("Poki static checks passed")
+          PY
+      - name: Build upload ZIP
+        run: |
+          cd web/poki
+          zip -9 -r ../../skyline-rush-poki.zip .
+      - uses: actions/upload-artifact@v4
+        with:
+          name: skyline-rush-poki
+          path: skyline-rush-poki.zip
+          retention-days: 14
