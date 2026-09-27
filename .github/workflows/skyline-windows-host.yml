@@ -29,7 +29,7 @@ jobs:
         run: |
           $ErrorActionPreference = 'Stop'
           $compiler = "$env:WINDIR/Microsoft.NET/Framework64/v4.0.30319/csc.exe"
-          & $compiler /nologo /out:HostTests.exe ([IO.Path]::GetFullPath('launcher/WindowsMatchHost.cs')) ([IO.Path]::GetFullPath('launcher/HostTests.cs'))
+          & $compiler /nologo /reference:System.Web.Extensions.dll /out:HostTests.exe ([IO.Path]::GetFullPath('launcher/WindowsMatchHost.cs')) ([IO.Path]::GetFullPath('launcher/HostTests.cs')) ([IO.Path]::GetFullPath('launcher/TailscaleNetwork.cs'))
           if ($LASTEXITCODE -ne 0) { throw 'Compilation failed' }
           ./HostTests.exe ([IO.Path]::GetFullPath('game'))
           if ($LASTEXITCODE -ne 0) { throw 'Host integration failed' }

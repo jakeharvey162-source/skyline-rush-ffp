@@ -25,6 +25,11 @@ class HostTests
             }
             return 0;
         }
+        Check(!TailscaleNetwork.ParseStatus("{}").Connected, "missing VPN status rejected");
+        Check(!TailscaleNetwork.ParseStatus("not json").Connected, "malformed VPN status rejected");
+        Check(!TailscaleNetwork.ParseStatus("{\"BackendState\":\"Stopped\",\"TailscaleIPs\":[\"100.64.1.2\"]}").Connected, "stale disconnected IP rejected");
+        Check(!TailscaleNetwork.ParseStatus("{\"BackendState\":\"Running\",\"TailscaleIPs\":[\"192.168.1.2\"]}").Connected, "LAN address not advertised as VPN");
+        Check(TailscaleNetwork.ParseStatus("{\"BackendState\":\"Running\",\"TailscaleIPs\":[\"fd7a::1\",\"100.64.1.2\"]}").Address == "100.64.1.2", "VPN IPv4 selected");
         string state = Path.Combine(Path.GetTempPath(), "SkylineHostTest-" + Guid.NewGuid());
         try
         {
