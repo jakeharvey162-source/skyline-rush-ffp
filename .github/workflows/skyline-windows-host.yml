@@ -1,0 +1,35 @@
+name: Skyline Windows host integration
+on:
+  workflow_dispatch:
+  push:
+    branches: [main, skyline/windows-host]
+    paths: ['launcher/**', '.github/workflows/skyline-windows-host.yml']
+permissions:
+  contents: read
+  actions: read
+jobs:
+  native-host:
+    runs-on: windows-latest
+    timeout-minutes: 20
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download successful real game build
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $runs = @(gh run list --workflow skyline-windows.yml --branch main --status success --limit 1 --json databaseId | ConvertFrom-Json)
+          if ($LASTEXITCODE -ne 0 -or !$runs.Count) { throw 'No successful Windows build' }
+          gh run download $runs[0].databaseId --name skyline-rush-windows-playtest --dir game
+          if ($LASTEXITCODE -ne 0) { throw 'Download failed' }
+      - name: Compile and run real dedicated-server integration tests
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $compiler = "$env:WINDIR/Microsoft.NET/Framework64/v4.0.30319/csc.exe"
+          & $compiler /nologo /out:HostTests.exe ([IO.Path]::GetFullPath('launcher/WindowsMatchHost.cs')) ([IO.Path]::GetFullPath('launcher/HostTests.cs'))
+          if ($LASTEXITCODE -ne 0) { throw 'Compilation failed' }
+          ./HostTests.exe ([IO.Path]::GetFullPath('game'))
+          if ($LASTEXITCODE -ne 0) { throw 'Host integration failed' }
