@@ -10,7 +10,7 @@
 </head>
 <body>
 <main id="shell">
-  <canvas id="game" width="1280" height="720"></canvas>
+  <canvas id="game" width="1280" height="720" aria-label="Skyline Rush game view"></canvas>
 
   <section id="loading" class="screen active"><div class="card">
     <div class="eyebrow">SKYLINE RUSH // WEB ALPHA</div>
@@ -22,21 +22,31 @@
     <div class="hero">
       <div class="eyebrow">JOHANNESBURG // DISTRICT 01</div>
       <h1>SKYLINE<br><span>RUSH</span></h1>
-      <p class="tag">Fast rooftop combat built for the browser.</p>
+      <p class="tag">Three escalating waves. One rooftop. Keep the rush alive.</p>
       <button id="startBtn" class="primary">DEPLOY</button>
-      <div class="controls-note"><strong>Desktop:</strong> WASD + mouse + click<br><strong>Mobile:</strong> left stick + drag to look + FIRE</div>
+      <div id="controlGuide" class="controls-note">
+        <span class="control-chip">WASD</span><span>MOVE</span>
+        <span class="control-chip">MOUSE</span><span>AIM</span>
+        <span class="control-chip">CLICK</span><span>FIRE</span>
+      </div>
     </div>
-    <aside class="mission"><span>MISSION</span><strong>ROOFTOP STRIKE</strong><p>Clear 8 Rogue Machines before extraction.</p><div class="stat"><b>90</b><small>SECONDS</small></div></aside>
+    <aside class="mission">
+      <span>MISSION</span><strong>ROOFTOP STRIKE</strong>
+      <p>Clear three Rogue Machine waves. Chain fast kills to raise your Rush multiplier.</p>
+      <div class="mission-row"><div class="stat"><b>3</b><small>WAVES</small></div><div class="stat"><b>~3</b><small>MINUTES</small></div></div>
+    </aside>
   </section>
 
   <section id="hud" class="hud">
-    <div class="topbar"><div class="brand">SKYLINE RUSH</div><div id="timer">01:30</div><button id="pauseBtn" class="icon-btn">Ⅱ</button></div>
+    <div class="topbar"><div class="brand">SKYLINE RUSH</div><div class="wave-label">WAVE <b id="wave">1</b>/3</div><div id="timer">00:45</div><button id="pauseBtn" class="icon-btn" aria-label="Pause">Ⅱ</button></div>
     <div class="health"><span>HEALTH</span><b id="healthText">100</b><i><em id="healthFill"></em></i></div>
-    <div class="mission-mini"><span>ROGUE MACHINES</span><b><i id="kills">0</i>/8</b></div>
+    <div class="mission-mini"><span>ROGUE MACHINES</span><b><i id="kills">0</i>/<i id="targets">5</i></b><em id="rush">RUSH x1</em></div>
     <div class="ammo"><span>AR-7</span><b id="ammo">30</b><small>/ 30</small></div>
     <div class="crosshair"><i></i><i></i><i></i><i></i></div>
     <div id="hitmarker" class="hitmarker">×</div>
     <div id="damageFlash" class="damage-flash"></div>
+    <div id="waveBanner" class="wave-banner">WAVE 2</div>
+    <div id="tutorial" class="tutorial">MOVE • AIM • FIRE • KEEP THE RUSH ALIVE</div>
   </section>
 
   <section id="pause" class="screen compact"><div class="card">
@@ -47,11 +57,12 @@
   <section id="result" class="screen compact"><div class="card result-card">
     <div id="resultEyebrow" class="eyebrow">DISTRICT CLEARED</div><h2 id="resultTitle">VICTORY</h2>
     <div class="result-grid"><div><b id="resultKills">0</b><span>KILLS</span></div><div><b id="resultScore">0</b><span>SCORE</span></div><div><b id="bestScore">0</b><span>BEST</span></div></div>
-    <button id="retryBtn" class="primary">RUN IT BACK</button><button id="resultMenuBtn" class="secondary">MAIN MENU</button>
+    <p id="resultNote" class="result-note"></p>
+    <div class="result-actions"><button id="retryBtn" class="primary">RUN IT BACK</button><button id="rewardBtn" class="reward">🎬 REVIVE</button><button id="resultMenuBtn" class="secondary">MAIN MENU</button></div>
   </div></section>
 
-  <div id="mobileControls"><div id="stickZone"><div id="stick"><i></i></div></div><div id="lookZone"></div><button id="fireBtn">FIRE</button></div>
-  <div id="rotateHint">Rotate your device to landscape for the best experience.</div>
+  <div id="mobileControls"><div id="stickZone"><div id="stick"><i></i></div></div><div id="lookZone"></div><button id="reloadBtn">R</button><button id="fireBtn">FIRE</button></div>
+  <div id="rotateHint">Rotate your device to landscape to deploy.</div>
 </main>
 <script src="./game.js"></script>
 </body>
