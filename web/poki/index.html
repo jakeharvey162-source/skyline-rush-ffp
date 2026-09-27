@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+  <meta name="theme-color" content="#071017">
+  <title>Skyline Rush: Rooftop Strike</title>
+  <link rel="stylesheet" href="./style.css">
+  <script src="https://game-cdn.poki.com/scripts/v2/poki-sdk.js"></script>
+</head>
+<body>
+<main id="shell">
+  <canvas id="game" width="1280" height="720"></canvas>
+
+  <section id="loading" class="screen active"><div class="card">
+    <div class="eyebrow">SKYLINE RUSH // WEB ALPHA</div>
+    <h1>ROOFTOP STRIKE</h1><p>Loading Braamfontein Heights…</p>
+    <div class="loadbar"><i id="loadFill"></i></div>
+  </div></section>
+
+  <section id="menu" class="screen">
+    <div class="hero">
+      <div class="eyebrow">JOHANNESBURG // DISTRICT 01</div>
+      <h1>SKYLINE<br><span>RUSH</span></h1>
+      <p class="tag">Fast rooftop combat built for the browser.</p>
+      <button id="startBtn" class="primary">DEPLOY</button>
+      <div class="controls-note"><strong>Desktop:</strong> WASD + mouse + click<br><strong>Mobile:</strong> left stick + drag to look + FIRE</div>
+    </div>
+    <aside class="mission"><span>MISSION</span><strong>ROOFTOP STRIKE</strong><p>Clear 8 Rogue Machines before extraction.</p><div class="stat"><b>90</b><small>SECONDS</small></div></aside>
+  </section>
+
+  <section id="hud" class="hud">
+    <div class="topbar"><div class="brand">SKYLINE RUSH</div><div id="timer">01:30</div><button id="pauseBtn" class="icon-btn">Ⅱ</button></div>
+    <div class="health"><span>HEALTH</span><b id="healthText">100</b><i><em id="healthFill"></em></i></div>
+    <div class="mission-mini"><span>ROGUE MACHINES</span><b><i id="kills">0</i>/8</b></div>
+    <div class="ammo"><span>AR-7</span><b id="ammo">30</b><small>/ 30</small></div>
+    <div class="crosshair"><i></i><i></i><i></i><i></i></div>
+    <div id="hitmarker" class="hitmarker">×</div>
+    <div id="damageFlash" class="damage-flash"></div>
+  </section>
+
+  <section id="pause" class="screen compact"><div class="card">
+    <div class="eyebrow">TACTICAL PAUSE</div><h2>PAUSED</h2>
+    <button id="resumeBtn" class="primary">RESUME</button><button id="quitBtn" class="secondary">QUIT TO MENU</button>
+  </div></section>
+
+  <section id="result" class="screen compact"><div class="card result-card">
+    <div id="resultEyebrow" class="eyebrow">DISTRICT CLEARED</div><h2 id="resultTitle">VICTORY</h2>
+    <div class="result-grid"><div><b id="resultKills">0</b><span>KILLS</span></div><div><b id="resultScore">0</b><span>SCORE</span></div><div><b id="bestScore">0</b><span>BEST</span></div></div>
+    <button id="retryBtn" class="primary">RUN IT BACK</button><button id="resultMenuBtn" class="secondary">MAIN MENU</button>
+  </div></section>
+
+  <div id="mobileControls"><div id="stickZone"><div id="stick"><i></i></div></div><div id="lookZone"></div><button id="fireBtn">FIRE</button></div>
+  <div id="rotateHint">Rotate your device to landscape for the best experience.</div>
+</main>
+<script src="./game.js"></script>
+</body>
+</html>
