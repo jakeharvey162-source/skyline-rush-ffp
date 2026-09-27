@@ -9,6 +9,10 @@
     const release = releases.find(r => !r.draft && r.assets.some(a => /^skyline-rush-windows\.7z\.001$/.test(a.name)));
     if (!release) throw new Error('No public package yet');
     const files = release.assets.filter(a => /^skyline-rush-windows\.7z\.\d{3}$/.test(a.name)).sort((a,b) => a.name.localeCompare(b.name));
+    const checksums = release.assets.find(a => a.name === 'SHA256SUMS.txt');
+    if (!checksums || files.some((file, index) =>
+      file.name !== 'skyline-rush-windows.7z.' + String(index + 1).padStart(3, '0') ||
+      !Number.isSafeInteger(file.size) || file.size <= 0)) throw new Error('Incomplete release');
     list.replaceChildren();
     files.forEach((file, index) => {
       const url = new URL(file.browser_download_url);
@@ -19,7 +23,6 @@
       link.textContent = 'Download part ' + (index + 1) + ' of ' + files.length + ' · ' + (file.size / 1048576).toFixed(0) + ' MB';
       list.append(link);
     });
-    const checksums = release.assets.find(a => a.name === 'SHA256SUMS.txt');
     if (checksums) {
       const url = new URL(checksums.browser_download_url);
       if (url.origin === 'https://github.com' && url.pathname.startsWith('/jakeharvey162-source/skyline-rush-ffp/releases/download/')) {
