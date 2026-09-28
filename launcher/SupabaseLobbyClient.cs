@@ -216,6 +216,18 @@ namespace SkylineRush
             });
         }
 
+        public Task<SkylineLobbySnapshot> StartMatchAsync(SkylineSession session, Guid roomId)
+        {
+            return Task.Factory.StartNew(() =>
+            {
+                RequireSession(session);
+                var body = new Dictionary<string, object> {
+                    { "p_room_id", roomId.ToString() }, { "p_action", "start" }, { "p_ready", null }
+                };
+                return ParseLobby(Request("POST", "/rest/v1/rpc/skyline_lobby_action", body, session.AccessToken, null));
+            });
+        }
+
         public Task LeaveRoomAsync(SkylineSession session, Guid roomId)
         {
             return Task.Factory.StartNew(() =>
