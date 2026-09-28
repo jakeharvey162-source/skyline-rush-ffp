@@ -4,6 +4,10 @@ on:
   push:
     branches: [main, master]
     paths-ignore: ["**.md", "web/**", "vercel.json", ".github/workflows/skyline-downloads.yml", "tests/downloads.test.cjs", ".github/workflows/skyline-website.yml"]
+concurrency:
+  group: skyline-windows-${{ github.ref }}
+  cancel-in-progress: true
+
 permissions:
   contents: read
 jobs:
