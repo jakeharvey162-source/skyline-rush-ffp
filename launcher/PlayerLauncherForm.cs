@@ -55,6 +55,10 @@ namespace SkylineRush
             FormClosing += (s, e) =>
             {
                 lobbyTimer.Stop();
+                if (room != null && session != null && session.IsUsable)
+                {
+                    try { api.LeaveRoomAsync(session, room.RoomId).Wait(1500); } catch { }
+                }
                 try { if (hostedMatch != null && host != null) host.Stop(hostedMatch.Id); } catch { }
                 if (host != null) host.Dispose();
             };
