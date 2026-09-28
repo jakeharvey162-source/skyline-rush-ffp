@@ -47,6 +47,7 @@ jobs:
           if ($LASTEXITCODE -ne 0) { throw 'Launcher security smoke tests failed' }
 
   native-host:
+    needs: launcher
     runs-on: windows-latest
     timeout-minutes: 20
     env:
