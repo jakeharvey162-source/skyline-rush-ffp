@@ -3,7 +3,7 @@ on:
   workflow_dispatch:
   push:
     branches: [main, master]
-    paths-ignore: ["**.md", "web/**", "vercel.json", ".github/workflows/skyline-downloads.yml", "tests/downloads.test.cjs", ".github/workflows/skyline-website.yml"]
+    paths-ignore: ["**.md", "web/**", "database/**", "vercel.json", ".github/workflows/skyline-downloads.yml", "tests/downloads.test.cjs", ".github/workflows/skyline-website.yml"]
 concurrency:
   group: skyline-graphics-${{ github.ref }}
   cancel-in-progress: true
