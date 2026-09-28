@@ -35,7 +35,7 @@ namespace SkylineRush
         readonly Button readyButton = new Button();
         readonly Button connectButton = new Button();
         readonly Button leaveButton = new Button();
-        readonly Timer lobbyTimer = new Timer();
+        readonly System.Windows.Forms.Timer lobbyTimer = new System.Windows.Forms.Timer();
 
         public SkylineLauncherForm(string gameRoot)
         {
