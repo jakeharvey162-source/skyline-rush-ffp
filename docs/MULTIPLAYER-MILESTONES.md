@@ -13,6 +13,7 @@ Skyline Rush keeps the existing C++ engine, Supabase backend and dedicated-serve
 - Windows `WindowsMatchHost` uses private state directories and Job Objects so owned server processes die with the launcher.
 - Windows host tests cover real dedicated-server startup, unique credentials, port-pair conflicts, capacity, crash reaping and stale-credential cleanup.
 - Tailscale discovery accepts only a connected IPv4 in 100.64.0.0/10 and returns player-facing setup errors otherwise.
+- Joiners are preflighted before lobby admission: local Tailscale must be connected and the host must answer a Tailscale ping. Failed reachability checks remove the attempted membership instead of leaving a dead lobby slot.
 
 ## Native Windows player flow implemented
 
@@ -26,10 +27,11 @@ Player flow:
 4. Host chooses mode + district and creates a room.
 5. Launcher verifies Tailscale, starts the real local dedicated server, waits for readiness, then creates a protected Supabase room.
 6. Host shares only the six-character room code.
-7. Joiner signs in, enters the code and sees the lobby roster/ready state.
-8. Host selects **Start Match** after everyone is ready.
-9. The backend moves the room to `starting`.
-10. Host and joiner launchers automatically connect to the protected server endpoint; normal players do not type IPs, passwords or console commands.
+7. Joiner signs in and enters the code; Skyline verifies the joiner's Tailscale connection and host reachability before keeping the membership.
+8. Joiner sees the lobby roster/ready state.
+9. Host selects **Start Match** after everyone is ready.
+10. The backend moves the room to `starting`.
+11. Host and joiner launchers automatically connect to the protected server endpoint; normal players do not type IPs, passwords or console commands.
 
 The refresh token is persisted with Windows DPAPI for the current Windows user. The Supabase service-role key is never shipped.
 
