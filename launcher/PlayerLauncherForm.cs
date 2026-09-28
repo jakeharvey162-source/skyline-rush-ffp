@@ -316,6 +316,12 @@ namespace SkylineRush
             refreshing = true;
             try
             {
+                if (isHost && hostedMatch != null && hostedMatch.HasExited)
+                {
+                    SetStatus("The dedicated server stopped unexpectedly. The room has been closed; create a new room to retry.");
+                    await LeaveRoomAsync(false);
+                    return;
+                }
                 SkylineLobbySnapshot lobby = await api.LobbyAsync(session, room.RoomId);
                 lobbyTitle.Text = "ROOM " + lobby.Code + Environment.NewLine + lobby.Mode.ToUpperInvariant() + " • " + lobby.District.ToUpperInvariant() + " • " + lobby.Status.ToUpperInvariant();
                 players.Items.Clear();
