@@ -289,13 +289,19 @@ namespace SkylineRush
         async Task JoinRoomAsync()
         {
             if (!RequireSession()) return;
+            SetStatus("Checking Tailscale before joining…");
+            NetworkStatus network = await TailscaleNetwork.CheckAsync();
+            tailscale.ForeColor = network.Connected ? Color.FromArgb(95, 235, 160) : Color.FromArgb(242, 163, 58);
+            tailscale.Text = network.Message + (network.Connected ? "  " + network.Address : "");
+            if (!network.Connected) { SetStatus(network.Message); return; }
+
             SetStatus("Joining room…");
             try
             {
                 SkylineRoomInfo joined = await api.JoinRoomAsync(session, roomCode.Text);
                 SkylineSupabaseClient.ValidateConnection(joined);
                 room = joined; isHost = false;
-                ActivateLobby("Joined room " + room.Code + ". Mark Ready, then Play Match when your host is ready.");
+                ActivateLobby("Joined room " + room.Code + ". Mark Ready; the game will open automatically when the host starts.");
                 await RefreshLobbyAsync();
             }
             catch (Exception ex) { SetStatus(Friendly(ex)); }
