@@ -2,7 +2,7 @@ name: Skyline Rush Microsoft package validation
 on:
   push:
     branches: [main]
-    paths: ["packaging/windows/**", ".github/workflows/skyline-msix.yml"]
+    paths: ["packaging/windows/**", "launcher/**", ".github/workflows/skyline-msix.yml"]
   workflow_dispatch:
     inputs:
       identity_name:
@@ -17,6 +17,10 @@ on:
         description: Exact Publisher Display Name from Partner Center
         required: false
         type: string
+concurrency:
+  group: skyline-msix-${{ github.ref }}
+  cancel-in-progress: true
+
 permissions:
   contents: read
   actions: read
