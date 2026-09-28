@@ -1,5 +1,4 @@
 using System;
-using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
 
@@ -11,15 +10,12 @@ internal static class SkylineLauncher
         try
         {
             string root = AppDomain.CurrentDomain.BaseDirectory;
-            string home = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "SkylineRush", "player");
-            Directory.CreateDirectory(home);
             string exe = Path.Combine(root, "bin", "amd64", "redeclipse_windows_amd64.exe");
-            if (!File.Exists(exe)) throw new FileNotFoundException("The game executable is missing. Reinstall the full game package.");
-            ProcessStartInfo start = new ProcessStartInfo(exe);
-            start.WorkingDirectory = root;
-            start.Arguments = "-h\"" + home + "\"";
-            start.UseShellExecute = false;
-            using (Process game = Process.Start(start)) { game.WaitForExit(); return game.ExitCode; }
+            if (!File.Exists(exe)) throw new FileNotFoundException("The game executable is missing. Reinstall the full Skyline Rush package.");
+            Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(false);
+            Application.Run(new SkylineRush.SkylineLauncherForm(root));
+            return 0;
         }
         catch (Exception error)
         {
