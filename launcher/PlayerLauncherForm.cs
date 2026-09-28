@@ -300,8 +300,15 @@ namespace SkylineRush
             {
                 SkylineRoomInfo joined = await api.JoinRoomAsync(session, roomCode.Text);
                 SkylineSupabaseClient.ValidateConnection(joined);
+                NetworkStatus peer = await TailscaleNetwork.CheckPeerAsync(joined.HostAddress);
+                if (!peer.Connected)
+                {
+                    try { await api.LeaveRoomAsync(session, joined.RoomId); } catch { }
+                    SetStatus(peer.Message);
+                    return;
+                }
                 room = joined; isHost = false;
-                ActivateLobby("Joined room " + room.Code + ". Mark Ready; the game will open automatically when the host starts.");
+                ActivateLobby("Joined room " + room.Code + ". Host reachable. Mark Ready; the game will open automatically when the host starts.");
                 await RefreshLobbyAsync();
             }
             catch (Exception ex) { SetStatus(Friendly(ex)); }
