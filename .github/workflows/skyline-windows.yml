@@ -5,7 +5,7 @@ on:
     branches: [main, master]
     paths-ignore: ["**.md", "web/**", "database/**", "vercel.json", ".github/workflows/skyline-downloads.yml", "tests/downloads.test.cjs", ".github/workflows/skyline-website.yml"]
 concurrency:
-  group: skyline-windows-${{ github.ref }}
+  group: skyline-windows-${{ github.sha }}
   cancel-in-progress: true
 
 permissions:
