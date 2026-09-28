@@ -97,9 +97,11 @@ namespace SkylineRush
             signIn.Click += async (s, e) => await SignInAsync();
             var signUp = Button("CREATE ACCOUNT", 234, 284, 190);
             signUp.Click += async (s, e) => await SignUpAsync();
-            authPanel.Controls.Add(signIn); authPanel.Controls.Add(signUp);
+            var offlineGuest = Button("PLAY OFFLINE — NO ACCOUNT", 470, 284, 380);
+            offlineGuest.Click += (s, e) => LaunchGame(null);
+            authPanel.Controls.Add(signIn); authPanel.Controls.Add(signUp); authPanel.Controls.Add(offlineGuest);
 
-            AddLabel(authPanel, "Your password is sent only to Supabase Auth. Skyline stores only an encrypted refresh token under your Windows user.", 470, 94, 380, false);
+            AddLabel(authPanel, "Accounts are only required for private online rooms. Your password is sent only to Supabase Auth; Skyline stores only an encrypted refresh token under your Windows user.", 470, 94, 380, false);
 
             appPanel.Location = new Point(28, 142); appPanel.Size = new Size(900, 440); appPanel.BackColor = Color.FromArgb(12, 26, 34); appPanel.Visible = false;
             Controls.Add(appPanel);
