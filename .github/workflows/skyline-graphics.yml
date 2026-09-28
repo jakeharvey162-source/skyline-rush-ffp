@@ -3,7 +3,7 @@ on:
   workflow_dispatch:
   push:
     branches: [main, master]
-    paths-ignore: ["**.md", "web/**", "database/**", "vercel.json", ".github/workflows/skyline-downloads.yml", "tests/downloads.test.cjs", ".github/workflows/skyline-website.yml"]
+    paths-ignore: ["**.md", "web/**", "database/**", "vercel.json", ".github/workflows/skyline-downloads.yml", ".github/workflows/skyline-windows.yml", ".github/workflows/skyline-windows-host.yml", ".github/workflows/skyline-msix.yml", ".github/workflows/skyline-poki.yml", "tests/downloads.test.cjs", ".github/workflows/skyline-website.yml"]
 concurrency:
   group: skyline-graphics-${{ github.sha }}
   cancel-in-progress: true
