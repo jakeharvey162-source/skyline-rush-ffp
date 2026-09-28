@@ -31,6 +31,23 @@ jobs:
           Copy-Item config,data,maps,doc,scripts -Destination package/skyline-rush/ -Recurse
           Get-ChildItem package/skyline-rush/data -Recurse -Force -Filter .git | Remove-Item -Force
           Copy-Item skyline-rush.bat,skyline-server.bat,skyline-room.bat,SKYLINE-START-HERE.md,SKYLINE-PLAYTEST-02.md,SKYLINE-LICENSE.md,readme.txt package/skyline-rush/
+
+      - name: Compile native Skyline launcher into package
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $compiler = "$env:WINDIR/Microsoft.NET/Framework64/v4.0.30319/csc.exe"
+          $refs = @('/reference:System.Windows.Forms.dll','/reference:System.Drawing.dll','/reference:System.Web.Extensions.dll','/reference:System.Security.dll')
+          $sources = @(
+            [IO.Path]::GetFullPath('packaging/windows/Launcher.cs'),
+            [IO.Path]::GetFullPath('launcher/PlayerLauncherForm.cs'),
+            [IO.Path]::GetFullPath('launcher/SupabaseLobbyClient.cs'),
+            [IO.Path]::GetFullPath('launcher/WindowsMatchHost.cs'),
+            [IO.Path]::GetFullPath('launcher/TailscaleNetwork.cs')
+          )
+          & $compiler /nologo /target:winexe /platform:x64 @refs /out:package/skyline-rush/SkylineRush.exe @sources
+          if ($LASTEXITCODE -ne 0) { throw 'Skyline launcher compilation failed' }
+          if (-not (Test-Path package/skyline-rush/SkylineRush.exe)) { throw 'Skyline launcher missing from package' }
       - name: Verify packaged Windows server startup
         shell: pwsh
         run: |
