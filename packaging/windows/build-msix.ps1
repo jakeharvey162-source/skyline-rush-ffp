@@ -21,9 +21,16 @@ $sdkRoot = Join-Path ${env:ProgramFiles(x86)} 'Windows Kits/10/bin'
 $makeappx = Get-ChildItem "$sdkRoot/*/x64/makeappx.exe" | Sort-Object FullName -Descending | Select-Object -First 1
 if (-not $makeappx) { throw 'Install the Windows SDK with MakeAppx first.' }
 $compiler = Join-Path $env:WINDIR 'Microsoft.NET/Framework64/v4.0.30319/csc.exe'
-$launcherSource = [System.IO.Path]::GetFullPath((Join-Path $PSScriptRoot 'Launcher.cs'))
 $launcherOutput = [System.IO.Path]::GetFullPath((Join-Path $stage 'SkylineRush.exe'))
-& $compiler /nologo /target:winexe /platform:x64 /reference:System.Windows.Forms.dll "/out:$launcherOutput" $launcherSource
+$launcherSources = @(
+    [System.IO.Path]::GetFullPath((Join-Path $PSScriptRoot 'Launcher.cs')),
+    [System.IO.Path]::GetFullPath((Join-Path $PSScriptRoot '../../launcher/PlayerLauncherForm.cs')),
+    [System.IO.Path]::GetFullPath((Join-Path $PSScriptRoot '../../launcher/SupabaseLobbyClient.cs')),
+    [System.IO.Path]::GetFullPath((Join-Path $PSScriptRoot '../../launcher/WindowsMatchHost.cs')),
+    [System.IO.Path]::GetFullPath((Join-Path $PSScriptRoot '../../launcher/TailscaleNetwork.cs'))
+)
+$refs = @('/reference:System.Windows.Forms.dll','/reference:System.Drawing.dll','/reference:System.Web.Extensions.dll','/reference:System.Security.dll')
+& $compiler /nologo /target:winexe /platform:x64 @refs "/out:$launcherOutput" @launcherSources
 if ($LASTEXITCODE -ne 0) { throw 'Launcher compilation failed.' }
 $icon = Join-Path $game 'data/skyline/icon.png'
 if (-not (Test-Path $icon)) { throw 'Packaged data/skyline/icon.png is missing.' }
