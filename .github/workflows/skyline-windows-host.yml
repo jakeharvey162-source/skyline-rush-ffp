@@ -6,7 +6,7 @@ on:
     paths: ['launcher/**', 'packaging/windows/Launcher.cs', '.github/workflows/skyline-windows-host.yml']
 
 concurrency:
-  group: skyline-windows-host-${{ github.ref }}
+  group: skyline-windows-host-${{ github.sha }}
   cancel-in-progress: true
 
 permissions:
