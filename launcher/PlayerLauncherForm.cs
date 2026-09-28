@@ -32,9 +32,9 @@ namespace SkylineRush
         readonly TextBox roomCode = new TextBox();
         readonly Label lobbyTitle = new Label();
         readonly ListBox players = new ListBox();
-        readonly Button readyButton = new Button();
-        readonly Button connectButton = new Button();
-        readonly Button leaveButton = new Button();
+        Button readyButton;
+        Button connectButton;
+        Button leaveButton;
         readonly System.Windows.Forms.Timer lobbyTimer = new System.Windows.Forms.Timer();
 
         public SkylineLauncherForm(string gameRoot)
