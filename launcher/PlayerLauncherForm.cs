@@ -18,6 +18,7 @@ namespace SkylineRush
         SkylineRoomInfo room;
         bool isHost;
         bool refreshing;
+        bool matchLaunched;
 
         readonly Label status = new Label();
         readonly Panel authPanel = new Panel();
@@ -131,7 +132,7 @@ namespace SkylineRush
             players.Location = new Point(300, 24); players.Size = new Size(270, 72); players.BackColor = Color.FromArgb(5, 14, 18); players.ForeColor = Color.White; players.BorderStyle = BorderStyle.FixedSingle;
             lobbyBox.Controls.Add(players);
             readyButton = Button("READY", 585, 24, 115); readyButton.Enabled = false; readyButton.Click += async (s, e) => await ToggleReadyAsync(); lobbyBox.Controls.Add(readyButton);
-            connectButton = Button("PLAY MATCH", 710, 24, 115); connectButton.Enabled = false; connectButton.Click += (s, e) => ConnectToRoom(); lobbyBox.Controls.Add(connectButton);
+            connectButton = Button("START MATCH", 710, 24, 115); connectButton.Enabled = false; connectButton.Click += async (s, e) => await StartMatchAsync(); lobbyBox.Controls.Add(connectButton);
             leaveButton = Button("LEAVE", 585, 66, 240); leaveButton.Enabled = false; leaveButton.Click += async (s, e) => await LeaveRoomAsync(); lobbyBox.Controls.Add(leaveButton);
         }
 
@@ -296,8 +297,10 @@ namespace SkylineRush
 
         void ActivateLobby(string message)
         {
-            lobbyTimer.Start(); readyButton.Enabled = true; connectButton.Enabled = true; leaveButton.Enabled = true;
+            matchLaunched = false;
+            lobbyTimer.Start(); readyButton.Enabled = true; connectButton.Enabled = isHost; leaveButton.Enabled = true;
             readyButton.Text = isHost ? "HOST READY" : "READY";
+            connectButton.Text = isHost ? "START MATCH" : "WAITING FOR HOST";
             SetStatus(message);
         }
 
@@ -317,6 +320,23 @@ namespace SkylineRush
                     if (p.UserId == session.UserId) meReady = p.Ready;
                 }
                 readyButton.Text = meReady ? "NOT READY" : "READY";
+                if (String.Equals(lobby.Status, "starting", StringComparison.OrdinalIgnoreCase) && !matchLaunched)
+                {
+                    matchLaunched = true;
+                    connectButton.Enabled = false;
+                    connectButton.Text = "STARTING…";
+                    ConnectToRoom();
+                }
+                else if (isHost)
+                {
+                    connectButton.Enabled = String.Equals(lobby.Status, "open", StringComparison.OrdinalIgnoreCase) && !matchLaunched;
+                    connectButton.Text = connectButton.Enabled ? "START MATCH" : "STARTING…";
+                }
+                else
+                {
+                    connectButton.Enabled = false;
+                    connectButton.Text = String.Equals(lobby.Status, "open", StringComparison.OrdinalIgnoreCase) ? "WAITING FOR HOST" : "STARTING…";
+                }
             }
             catch (Exception ex)
             {
@@ -336,6 +356,28 @@ namespace SkylineRush
                 await RefreshLobbyAsync();
             }
             catch (Exception ex) { SetStatus(Friendly(ex)); }
+        }
+
+        async Task StartMatchAsync()
+        {
+            if (!isHost || room == null || matchLaunched) return;
+            connectButton.Enabled = false;
+            connectButton.Text = "STARTING…";
+            SetStatus("Starting the match for everyone in the lobby…");
+            try
+            {
+                SkylineLobbySnapshot lobby = await api.StartMatchAsync(session, room.RoomId);
+                if (!String.Equals(lobby.Status, "starting", StringComparison.OrdinalIgnoreCase))
+                    throw new InvalidOperationException("The room did not enter the starting state.");
+                matchLaunched = true;
+                ConnectToRoom();
+            }
+            catch (Exception ex)
+            {
+                connectButton.Enabled = true;
+                connectButton.Text = "START MATCH";
+                SetStatus(Friendly(ex));
+            }
         }
 
         void ConnectToRoom()
@@ -381,7 +423,7 @@ namespace SkylineRush
                 try { host.Stop(hostedMatch.Id); } catch { }
                 hostedMatch = null;
             }
-            room = null; isHost = false; players.Items.Clear(); lobbyTitle.Text = "No active room.";
+            room = null; isHost = false; matchLaunched = false; players.Items.Clear(); lobbyTitle.Text = "No active room.";
             readyButton.Enabled = false; connectButton.Enabled = false; leaveButton.Enabled = false;
             if (showStatus) SetStatus("Left the room.");
         }
