@@ -30,6 +30,27 @@ jobs:
           $ErrorActionPreference = 'Stop'
           $compiler = "$env:WINDIR/Microsoft.NET/Framework64/v4.0.30319/csc.exe"
           & $compiler /nologo /reference:System.Web.Extensions.dll /out:HostTests.exe ([IO.Path]::GetFullPath('launcher/WindowsMatchHost.cs')) ([IO.Path]::GetFullPath('launcher/HostTests.cs')) ([IO.Path]::GetFullPath('launcher/TailscaleNetwork.cs'))
-          if ($LASTEXITCODE -ne 0) { throw 'Compilation failed' }
+          if ($LASTEXITCODE -ne 0) { throw 'Host test compilation failed' }
           ./HostTests.exe ([IO.Path]::GetFullPath('game'))
           if ($LASTEXITCODE -ne 0) { throw 'Host integration failed' }
+
+      - name: Compile native player launcher and run security smoke tests
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $compiler = "$env:WINDIR/Microsoft.NET/Framework64/v4.0.30319/csc.exe"
+          $refs = @('/reference:System.Windows.Forms.dll','/reference:System.Drawing.dll','/reference:System.Web.Extensions.dll','/reference:System.Security.dll')
+          $launcherSources = @(
+            [IO.Path]::GetFullPath('packaging/windows/Launcher.cs'),
+            [IO.Path]::GetFullPath('launcher/PlayerLauncherForm.cs'),
+            [IO.Path]::GetFullPath('launcher/SupabaseLobbyClient.cs'),
+            [IO.Path]::GetFullPath('launcher/WindowsMatchHost.cs'),
+            [IO.Path]::GetFullPath('launcher/TailscaleNetwork.cs')
+          )
+          & $compiler /nologo /target:winexe /platform:x64 @refs /out:SkylineRush.exe @launcherSources
+          if ($LASTEXITCODE -ne 0) { throw 'Player launcher compilation failed' }
+
+          & $compiler /nologo /reference:System.Web.Extensions.dll /reference:System.Security.dll /out:LauncherSmokeTests.exe ([IO.Path]::GetFullPath('launcher/SupabaseLobbyClient.cs')) ([IO.Path]::GetFullPath('launcher/LauncherSmokeTests.cs'))
+          if ($LASTEXITCODE -ne 0) { throw 'Launcher smoke test compilation failed' }
+          ./LauncherSmokeTests.exe
+          if ($LASTEXITCODE -ne 0) { throw 'Launcher security smoke tests failed' }
