@@ -12,7 +12,7 @@ permissions:
   contents: write
 concurrency:
   group: skyline-public-downloads
-  cancel-in-progress: false
+  cancel-in-progress: true
 jobs:
   publish:
     if: github.event_name != 'workflow_run' || (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'main' && github.event.workflow_run.head_repository.full_name == github.repository)
